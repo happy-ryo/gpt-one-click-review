@@ -76,4 +76,4 @@ const getOpenAiApiKey = (): string => {
         }
         return key;
     }
-}
+};

@@ -38,7 +38,7 @@ const subscriptionReviewCode = (context: vscode.ExtensionContext, model: string)
     });
     context.subscriptions.push(reviewCode);
     return undefined;
-}
+};
 
 const getFileExtension = (): string => {
     let editor = vscode.window.activeTextEditor;
@@ -62,7 +62,7 @@ const getSelectedText = (): string => {
     } else {
         return selectedText;
     }
-}
+};
 
 const getModelNumber = (model: string): number => {
     if (model === 'gpt-4') {
@@ -70,7 +70,7 @@ const getModelNumber = (model: string): number => {
     } else {
         return 3;
     }
-}
+};
 
 // This method is called when your extension is deactivated
 export function deactivate() { }
