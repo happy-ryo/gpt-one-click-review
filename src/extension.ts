@@ -23,37 +23,33 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(disposable);
 
-    reviewCode(context, 'gpt-4');
-    reviewCode(context, 'gpt-3.5');
+    subscriptionReviewCode(context, 'gpt-4');
+    subscriptionReviewCode(context, 'gpt-3.5');
 }
 
-function reviewCode(context: vscode.ExtensionContext, model: string) {
-    let reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${model}`, async () => {
+function subscriptionReviewCode(context: vscode.ExtensionContext, model: string) {
+    let reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${modelNumber(model)}`, async () => {
         const selectedText = getSelectedText();
         const fileExtension = getFileExtension();
-        const model = 'gpt-4';
         startLoading(context);
 
-        await getReview(selectedText, fileExtension, model).then((review) => {
-            if (!webViewPanel) {
-                webViewPanel = initializeWebViewPanel(context);
-            }
+        getReview(selectedText, fileExtension, model).then((review) => {
+            webViewPanel = getWebViewPanel(context);
             webViewPanel.webview.html = review;
-            webViewPanel.reveal();
         }).catch((error) => {
-            if (!webViewPanel) {
-                webViewPanel = initializeWebViewPanel(context);
-            }
+            webViewPanel = getWebViewPanel(context);
             webViewPanel.webview.html = `<html><body><h1>Error</h1><p>${error}</p></body></html>`;
-            webViewPanel.reveal();
+        }).finally(() => {
+            webViewPanel?.reveal();
         });
     });
     context.subscriptions.push(reviewCode);
+    return undefined;
 }
 
 async function getReview(selectedText: string, fileExtension: string, model: string): Promise<string> {
-    const prompt = `以下の${fileExtension}で書かれたコードをプロフェッショナルとしてレビューしてください、結果はHTMLとして返してください、Bodyタグ内に挿入される前提で項目毎に適宜PタグやBRタグ、プログラミングコードの部分はCodeタグで囲んで白背景で黒文字にし適切に整形してください。
-    タイトルや項目のナンバーは太文字にして下線を引きわかりやすくしてください。日本語でやさしいレビューをお願いします。:\n\n${selectedText}`;
+    const prompt = `以下の${fileExtension}で書かれたコードをプロフェッショナルとしてレビューしてください、結果はHTMLとして返してください、項目毎に適宜PタグやBRタグ、プログラミングコードの部分はCodeタグで囲んで白背景で黒文字にし適切に整形してください。
+    タイトルや項目のナンバーは太文字にして下線を引きわかりやすくしてください。レビューは日本語で行ってください。:\n\n${selectedText}`;
 
     const configuration = new Configuration({
         apiKey: getOpenAiApiKey(),
@@ -122,41 +118,59 @@ function getOpenAiApiKey(): string {
 }
 
 function startLoading(content: vscode.ExtensionContext): void {
-    if (!webViewPanel) {
-        webViewPanel = initializeWebViewPanel(content);
-    }
+    webViewPanel = getWebViewPanel(content);
     webViewPanel.webview.html = `
-<html>
+    <html>
     <head>
         <style>
-            .loading-indicator {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                font-size: 24px;
+            /* ローディングインジケータのスタイル */
+            .loader {
+                border: 16px solid #f3f3f3;  /* ライトグレー */
+                border-top: 16px solid #3498db; /* 青 */
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            /* 回転アニメーション */
+            @keyframes spin {
+                0% { transform: translate(-50%, -50%) rotate(0deg); }
+                100% { transform: translate(-50%, -50%) rotate(360deg); }
             }
         </style>
     </head>
     <body>
-        <div class="loading-indicator">
-            Loading...
-        </div>
+        <div class="loader"></div>
     </body>
 </html>`;
 }
 
-function initializeWebViewPanel(content: vscode.ExtensionContext): vscode.WebviewPanel {
-    webViewPanel = vscode.window.createWebviewPanel(
-        'codeReview',
-        'Code Review',
-        vscode.ViewColumn.Beside,
-        {}
-    );
-    webViewPanel.onDidDispose(() => {
-        webViewPanel = undefined;
-    }, null, content.subscriptions);
+function getWebViewPanel(content: vscode.ExtensionContext): vscode.WebviewPanel {
+    if (!webViewPanel) {
+        webViewPanel = vscode.window.createWebviewPanel(
+            'codeReview',
+            'Code Review',
+            vscode.ViewColumn.Beside,
+            {}
+        );
+        webViewPanel.onDidDispose(() => {
+            webViewPanel = undefined;
+        }, null, content.subscriptions);
+    }
     return webViewPanel;
+}
+
+function modelNumber(model: string): number {
+    if (model === 'gpt-4') {
+        return 4;
+    } else {
+        return 3;
+    }
 }
 
 // This method is called when your extension is deactivated
