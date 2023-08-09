@@ -1,71 +1,81 @@
 # gpt-one-click-review README
 
-This is the README for your extension "gpt-one-click-review". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
 **Enjoy!**
+
+## インストール手順
+
+1. **VS Codeのインストール**  
+   まだVisual Studio Codeをインストールしていない場合、[公式サイト](https://code.visualstudio.com/)からダウンロードし、インストールしてください。
+
+2. **VS Codeの拡張機能のインストール**
+   - Visual Studio Codeを開きます。
+   - サイドバーのアイコンから「拡張機能」(四角いアイコン)をクリックします。
+   - トップのメニューにある「...」(その他の操作)をクリックし、`VSIXからのインストール`を選択します。
+
+3. **.vsixファイルの選択**
+   - 事前に提供された.vsixファイルを探し、選択してください。
+   - 選択が完了したら、自動的にインストールが開始されます。
+
+4. **OpenAI API Keyの設定**  
+   - プラグインをインストールした後、Visual Studio Codeの設定画面に移動します。
+   - このプラグインに特有の設定を検索します。
+   - OpenAI API Keyの項目を見つけて、あなたのキーを入力します。
+   - 設定を保存します。
+
+5. **確認**  
+   インストールが完了したら、VS Codeの「拡張機能」タブで新しくインストールされたプラグインが表示されることを確認してください。
+
+6. **完了**  
+   これでプラグインのインストールは完了です。VS Codeを再起動して、新しい機能を利用してください。
+
+
+## 使い方
+
+1. **コードの選択**  
+   Visual Studio Codeのエディタ上で、レビューしてほしい部分のコードを選択します。
+
+2. **レビュー機能の起動**  
+   選択したコードの範囲で右クリックをします。表示されるコンテキストメニューの中から`GPT-3 Review`または`GPT-4 Review`をクリックします。
+
+3. **レビューの受領**  
+   上記の操作を行うと、GPT-3またはGPT-4によるコードのレビューが開始されます。しばらくすると、レビューの結果が表示されますので、それに従ってコードの修正や改善を行うことができます。
+
+
+
+## Installation Instructions
+
+1. **Install VS Code**  
+   If you haven't installed Visual Studio Code yet, download and install it from the [official website](https://code.visualstudio.com/).
+
+2. **Installing the VS Code Extension**
+   - Open Visual Studio Code.
+   - Click on the 'Extensions' icon (shaped like a square) in the sidebar.
+   - Click on the '...' (more actions) at the top of the menu and select `Install from VSIX`.
+
+3. **Select the .vsix file**
+   - Locate the provided .vsix file and select it.
+   - Once selected, the installation will begin automatically.
+
+4. **Configure the OpenAI API Key**  
+   - After installing the plugin, go to the settings of Visual Studio Code.
+   - Search for the settings specific to this plugin.
+   - Find the field for the OpenAI API Key and input your key.
+   - Save the settings.
+
+5. **Verification**  
+   After the installation completes, verify that the newly installed plugin appears in the 'Extensions' tab of VS Code.
+
+6. **Completion**  
+   The plugin installation is now complete. Restart VS Code to start using the new features.
+
+
+## How to Use
+
+1. **Selecting the Code**  
+   In the Visual Studio Code editor, highlight the section of code you want to have reviewed.
+
+2. **Initiating the Review**  
+   Right-click on the highlighted code. From the context menu that appears, click on `GPT-3 Review` or `GPT-4 Review`.
+
+3. **Receiving the Review**  
+   After performing the above steps, the review by GPT-3 or GPT-4 will begin. After a short while, you will receive feedback on the selected code. Use this feedback to make necessary corrections or improvements to your code.
