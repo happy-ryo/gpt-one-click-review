@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { webViewPanel } from './extension';
+export let webViewPanel: vscode.WebviewPanel | undefined = undefined;
 
 export const startLoading = (content: vscode.ExtensionContext) => {
     webViewPanel = getWebViewPanel(content);

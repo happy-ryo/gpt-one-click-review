@@ -2,8 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { getReview } from './apiManager';
-import { startLoading, getWebViewPanel } from './webViewManager';
-export let webViewPanel: vscode.WebviewPanel | undefined = undefined;
+import { startLoading, getWebViewPanel, webViewPanel } from './webViewManager';
+
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -35,10 +35,10 @@ const subscriptionReviewCode = (context: vscode.ExtensionContext, model: string)
         startLoading(context);
 
         getReview(selectedText, fileExtension, model).then((review) => {
-            webViewPanel = getWebViewPanel(context);
+            let webViewPanel = getWebViewPanel(context);
             webViewPanel.webview.html = review;
         }).catch((error) => {
-            webViewPanel = getWebViewPanel(context);
+            let webViewPanel = getWebViewPanel(context);
             webViewPanel.webview.html = `<html><body><h1>Error</h1><p>${error}</p></body></html>`;
         }).finally(() => {
             webViewPanel?.reveal();
