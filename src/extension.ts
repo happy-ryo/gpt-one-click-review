@@ -23,9 +23,35 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(disposable);
 
+    reviewCode(context, 'gpt-4');
+    reviewCode(context, 'gpt-3.5');
 }
 
-async function getReview(selectedText: string, fileExtension: string): Promise<string> {
+function reviewCode(context: vscode.ExtensionContext, model: string) {
+    let reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${model}`, async () => {
+        const selectedText = getSelectedText();
+        const fileExtension = getFileExtension();
+        const model = 'gpt-4';
+        startLoading(context);
+
+        await getReview(selectedText, fileExtension, model).then((review) => {
+            if (!webViewPanel) {
+                webViewPanel = initializeWebViewPanel(context);
+            }
+            webViewPanel.webview.html = review;
+            webViewPanel.reveal();
+        }).catch((error) => {
+            if (!webViewPanel) {
+                webViewPanel = initializeWebViewPanel(context);
+            }
+            webViewPanel.webview.html = `<html><body><h1>Error</h1><p>${error}</p></body></html>`;
+            webViewPanel.reveal();
+        });
+    });
+    context.subscriptions.push(reviewCode);
+}
+
+async function getReview(selectedText: string, fileExtension: string, model: string): Promise<string> {
     const prompt = `以下の${fileExtension}で書かれたコードをプロフェッショナルとしてレビューしてください、結果はHTMLとして返してください、Bodyタグ内に挿入される前提で項目毎に適宜PタグやBRタグ、プログラミングコードの部分はCodeタグで囲んで白背景で黒文字にし適切に整形してください。
     タイトルや項目のナンバーは太文字にして下線を引きわかりやすくしてください。日本語でやさしいレビューをお願いします。:\n\n${selectedText}`;
 
@@ -36,7 +62,7 @@ async function getReview(selectedText: string, fileExtension: string): Promise<s
     const openai = new OpenAIApi(configuration);
 
     const chatCompletion = await openai.createChatCompletion({
-        model: "gpt-4",
+        model: model,
         messages: [{ role: "user", content: prompt }],
     });
 
@@ -95,14 +121,13 @@ function getOpenAiApiKey(): string {
     }
 }
 
-function startLoading(): void {
+function startLoading(content: vscode.ExtensionContext): void {
     if (!webViewPanel) {
-        webViewPanel = initializeWebViewPanel();
+        webViewPanel = initializeWebViewPanel(content);
     }
     webViewPanel.webview.html = `
 <html>
     <head>
-        <!-- 必要に応じてスタイルを追加 -->
         <style>
             .loading-indicator {
                 display: flex;
@@ -121,13 +146,16 @@ function startLoading(): void {
 </html>`;
 }
 
-function initializeWebViewPanel(): vscode.WebviewPanel {
+function initializeWebViewPanel(content: vscode.ExtensionContext): vscode.WebviewPanel {
     webViewPanel = vscode.window.createWebviewPanel(
         'codeReview',
         'Code Review',
         vscode.ViewColumn.Beside,
         {}
     );
+    webViewPanel.onDidDispose(() => {
+        webViewPanel = undefined;
+    }, null, content.subscriptions);
     return webViewPanel;
 }
 
