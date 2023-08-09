@@ -19,6 +19,7 @@ export const startLoading = (content: vscode.ExtensionContext) => {
     </html>
 `;
 }
+
 export const getWebViewPanel = (content: vscode.ExtensionContext): vscode.WebviewPanel => {
     if (!webViewPanel) {
         webViewPanel = vscode.window.createWebviewPanel(
