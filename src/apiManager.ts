@@ -63,11 +63,6 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     }
 }
 
-
-function delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 const getOpenAiApiKey = (): string => {
     const config = vscode.workspace.getConfiguration('gpt-one-click-review');
     const key = config.get('openaiApiKey');
