@@ -17,7 +17,18 @@
         "command": "gpt-one-click-review.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "GPT One Click Review",
+      "properties": {
+        "gpt-one-click-review.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API Key (sk-xxxxxxxxxxxxx)",
+          "scope": "window"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
