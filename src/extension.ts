@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import { getReview } from './apiManager';
 import { startLoading, getWebViewPanel, webViewPanel } from './webViewManager';
-
+import * as path from 'path';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -29,20 +29,12 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 const subscriptionReviewCode = (context: vscode.ExtensionContext, model: string) => {
-    let reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${modelNumber(model)}`, async () => {
+    let reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${getModelNumber(model)}`, async () => {
         const selectedText = getSelectedText();
         const fileExtension = getFileExtension();
         startLoading(context);
 
-        getReview(selectedText, fileExtension, model).then((review) => {
-            let webViewPanel = getWebViewPanel(context);
-            webViewPanel.webview.html = review;
-        }).catch((error) => {
-            let webViewPanel = getWebViewPanel(context);
-            webViewPanel.webview.html = `<html><body><h1>Error</h1><p>${error}</p></body></html>`;
-        }).finally(() => {
-            webViewPanel?.reveal();
-        });
+        getReview(selectedText, fileExtension, model, context);
     });
     context.subscriptions.push(reviewCode);
     return undefined;
@@ -52,7 +44,7 @@ const getFileExtension = (): string => {
     let editor = vscode.window.activeTextEditor;
     if (editor) {
         let document = editor.document.uri.fsPath;
-        return require('path').extname(document);
+        return path.extname(document);
     }
     return '';
 };
@@ -62,18 +54,17 @@ const getSelectedText = (): string => {
     if (editor === undefined) {
         vscode.window.showErrorMessage('No active editor');
         throw new Error('No active editor');
+    }
+    const selectedText = editor.document.getText(editor.selection);
+    if (selectedText === '') {
+        vscode.window.showErrorMessage('No text selected');
+        throw new Error('No text selected');
     } else {
-        const selectedText = editor.document.getText(editor.selection);
-        if (selectedText === '') {
-            vscode.window.showErrorMessage('No text selected');
-            throw new Error('No text selected');
-        } else {
-            return selectedText;
-        }
+        return selectedText;
     }
 }
 
-const modelNumber = (model: string): number => {
+const getModelNumber = (model: string): number => {
     if (model === 'gpt-4') {
         return 4;
     } else {
