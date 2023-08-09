@@ -35,7 +35,7 @@ async function getReview(selectedText: string): Promise<string> {
 
     const chatCompletion = await openai.createChatCompletion({
         model: "gpt-4",
-        messages: [{ role: "user", content: prompt}],
+        messages: [{ role: "user", content: prompt }],
     });
 
     const review = chatCompletion.data.choices[0].message?.content;
