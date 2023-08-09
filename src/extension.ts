@@ -22,5 +22,11 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
+function getOpenAiApiKey() {
+	const config = vscode.workspace.getConfiguration('gpt-one-click-review');
+	const key = config.get('openaiApiKey');
+	return key;
+}
+
 // This method is called when your extension is deactivated
 export function deactivate() {}
