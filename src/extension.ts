@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { Configuration, OpenAIApi } from 'openai';
+let webViewPanel: vscode.WebviewPanel | undefined = undefined;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -24,8 +25,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-async function getReview(selectedText: string): Promise<string> {
-    const prompt = `This is a review of the following text: "${selectedText}"\n\nReview:`;
+async function getReview(selectedText: string, fileExtension: string): Promise<string> {
+    const prompt = `以下の${fileExtension}で書かれたコードをプロフェッショナルとしてレビューしてください、結果はHTMLとして返してください、Bodyタグ内に挿入される前提で項目毎に適宜PタグやBRタグ、プログラミングコードの部分はCodeタグで囲んで白背景で黒文字にし適切に整形してください。
+    タイトルや項目のナンバーは太文字にして下線を引きわかりやすくしてください。日本語でやさしいレビューをお願いします。:\n\n${selectedText}`;
 
     const configuration = new Configuration({
         apiKey: getOpenAiApiKey(),
@@ -50,6 +52,15 @@ async function getReview(selectedText: string): Promise<string> {
         }
         return review;
     }
+}
+
+function getFileExtension(): string {
+	let editor = vscode.window.activeTextEditor;
+	if (editor) {
+		let document = editor.document.uri.fsPath;
+		return require('path').extname(document);
+	}
+	return '';
 }
 
 function getSelectedText(): string {
