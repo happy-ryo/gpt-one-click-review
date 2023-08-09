@@ -97,12 +97,7 @@ function getOpenAiApiKey(): string {
 
 function startLoading(): void {
     if (!webViewPanel) {
-        webViewPanel = vscode.window.createWebviewPanel(
-            'codeReview',
-            'Code Review',
-            vscode.ViewColumn.Beside,
-            {}
-        );
+        webViewPanel = initializeWebViewPanel();
     }
     webViewPanel.webview.html = `
 <html>
@@ -124,6 +119,16 @@ function startLoading(): void {
         </div>
     </body>
 </html>`;
+}
+
+function initializeWebViewPanel(): vscode.WebviewPanel {
+    webViewPanel = vscode.window.createWebviewPanel(
+        'codeReview',
+        'Code Review',
+        vscode.ViewColumn.Beside,
+        {}
+    );
+    return webViewPanel;
 }
 
 // This method is called when your extension is deactivated
