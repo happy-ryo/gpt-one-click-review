@@ -22,10 +22,19 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 }
 
-function getOpenAiApiKey() {
+function getOpenAiApiKey(): string {
     const config = vscode.workspace.getConfiguration('gpt-one-click-review');
     const key = config.get('openaiApiKey');
-    return key;
+    if (key === undefined || key === '') {
+        vscode.window.showErrorMessage('Please set your OpenAI API key in the settings');
+        throw new Error('OpenAI API key not set');
+    } else {
+        if (typeof key !== 'string') {
+            vscode.window.showErrorMessage('OpenAI API key is not a string');
+            throw new Error('OpenAI API key is not a string');
+        }
+        return key;
+    }
 }
 
 // This method is called when your extension is deactivated
