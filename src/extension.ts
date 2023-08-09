@@ -55,12 +55,12 @@ async function getReview(selectedText: string, fileExtension: string): Promise<s
 }
 
 function getFileExtension(): string {
-	let editor = vscode.window.activeTextEditor;
-	if (editor) {
-		let document = editor.document.uri.fsPath;
-		return require('path').extname(document);
-	}
-	return '';
+    let editor = vscode.window.activeTextEditor;
+    if (editor) {
+        let document = editor.document.uri.fsPath;
+        return require('path').extname(document);
+    }
+    return '';
 }
 
 function getSelectedText(): string {
@@ -93,6 +93,37 @@ function getOpenAiApiKey(): string {
         }
         return key;
     }
+}
+
+function startLoading(): void {
+    if (!webViewPanel) {
+        webViewPanel = vscode.window.createWebviewPanel(
+            'codeReview',
+            'Code Review',
+            vscode.ViewColumn.Beside,
+            {}
+        );
+    }
+    webViewPanel.webview.html = `
+<html>
+    <head>
+        <!-- 必要に応じてスタイルを追加 -->
+        <style>
+            .loading-indicator {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                font-size: 24px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="loading-indicator">
+            Loading...
+        </div>
+    </body>
+</html>`;
 }
 
 // This method is called when your extension is deactivated
