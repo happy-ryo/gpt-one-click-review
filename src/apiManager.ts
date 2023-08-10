@@ -4,19 +4,23 @@ import { getWebViewPanel } from './webViewManager';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
     const prompt = `
-    Please review the code written in ${fileExtension} as a professional and return the results as an HTML file following the format below.
-    Insert line breaks as appropriate for each item and separate paragraphs using <p> tags.
-    Make titles and item numbers bold and underline them for clarity.
-    Ensure that every sentence ends with a <br>.
-    For programming code, ensure each line ends with a <br>.
-    When suggesting modifications to the source code, ensure they match the format of the code being reviewed.
-    Rate each point of feedback on a scale from 1 to 10. A score of 1 indicates that no change is necessary, but caution is advised. A score of 5 suggests that modifications would be beneficial, and a score of 10 emphasizes the need for corrections. Please include this score alongside each point of feedback.
-    The review should be conducted in Japanese.
-    
-    Title: <h2>Title</h2>
-    Item: <b>Bold</b><br>
-    Line break: </br>
-    Programming code: <code style="background-color:white;color:black;"><pre style="background-color:white;color:black;">Code</pre></code><br>
+    Please thoroughly review the code written in ${fileExtension} as a professional and return the results as an HTML file following the format below:</br></br>
+    Please limit your praise of the good parts to five items.</br></br>
+    Be sure to write sample code for the improvements.</br></br>
+
+    [limitation of the HTML code]
+    1. Insert line breaks as appropriate for each item and separate paragraphs using <p> tags. Ensure every item ends with a </br>.
+    2. Make titles and item numbers bold and underline them for clarity.
+    3. Ensure that every sentence ends with a </br>.
+    4. For programming code, ensure each line ends with a </br>.
+    5. When suggesting modifications to the source code, ensure they match the format of the code being reviewed.
+    6. Rate each point of feedback on a scale from 1 to 10. A score of 1 indicates that no change is necessary, but caution is advised. A score of 5 suggests that modifications would be beneficial, and a score of 10 emphasizes the need for corrections. Please include this score alongside each point of feedback.No score is required for positive feedback.
+    7. The review should be conducted in Japanese.
+
+    Title: <h2>Title</h2></br>
+    Item: <b>Bold</b></br>
+    Line break: </br></br>
+    Programming code: <code style="background-color:white;color:black;"><pre style="background-color:white;color:black;">Code</pre></code></br>
     `;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
@@ -29,9 +33,11 @@ export async function getReview(selectedText: string, fileExtension: string, mod
         ],
         max_tokens: 5000,
         stream: true,
+        temperature: 0.7,
     });
 
     let webViewPanel = getWebViewPanel(context);
+    webViewPanel.reveal();
 
     let buffer: string[] = [];
 
