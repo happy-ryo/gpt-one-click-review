@@ -14,10 +14,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "gpt-one-click-review.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "gpt-one-click-review.reviewCode4",
         "title": "GPT-4 Review"
       },
