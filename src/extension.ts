@@ -23,10 +23,10 @@ const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: str
 };
 
 const getFileExtension = (): string => {
-    let editor = vscode.window.activeTextEditor;
-    if (editor) {
-        let document = editor.document.uri.fsPath;
-        return path.extname(document);
+    const editor = vscode.window.activeTextEditor;
+    if (editor != null) {
+        const filePath = editor.document.uri.fsPath;
+        return path.extname(filePath);
     }
     return '';
 };
