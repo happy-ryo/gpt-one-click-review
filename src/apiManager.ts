@@ -25,47 +25,50 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
 
-    const stream = await openai.chat.completions.create({
-        model: model,
-        messages: [
-            { "role": "system", "content": prompt },
-            { "role": "user", "content": selectedText }
-        ],
-        max_tokens: 5000,
-        stream: true,
-        temperature: 0.7,
-    });
+    try {
+        const stream = await openai.chat.completions.create({
+            model: model,
+            messages: [
+                { "role": "system", "content": prompt },
+                { "role": "user", "content": selectedText }
+            ],
+            max_tokens: 5000,
+            stream: true,
+            temperature: 0.7,
+        });
 
-    let webViewPanel = getWebViewPanel(context);
-    webViewPanel.reveal();
+        let webViewPanel = getWebViewPanel(context);
+        webViewPanel.reveal();
 
-    let buffer: string[] = [];
+        let buffer: string[] = [];
 
-    for await (const message of stream) {
-        let text = message.choices[0].delta;
-        if (text === undefined || text === null || text.content === undefined || text.content === null) {
-            continue;
+        for await (const message of stream) {
+            let text = message.choices[0].delta;
+            if (text === undefined || text === null || text.content === undefined || text.content === null) {
+                continue;
+            }
+
+            buffer.push(text.content);
+
+            if (buffer.length === 50) {
+                const combinedContent = buffer.join('');
+                const currentContent = webViewPanel.webview.html;
+                const newContent = currentContent.replace('</body>', `${combinedContent}</body>`);
+                webViewPanel.webview.html = newContent;
+
+                buffer = [];
+            }
         }
 
-        buffer.push(text.content);
-
-        if (buffer.length === 50) {
+        if (buffer.length > 0) {
             const combinedContent = buffer.join('');
             const currentContent = webViewPanel.webview.html;
             const newContent = currentContent.replace('</body>', `${combinedContent}</body>`);
             webViewPanel.webview.html = newContent;
-
-            buffer = [];
         }
-
-        console.log(text);
-    }
-
-    if (buffer.length > 0) {
-        const combinedContent = buffer.join('');
-        const currentContent = webViewPanel.webview.html;
-        const newContent = currentContent.replace('</body>', `${combinedContent}</body>`);
-        webViewPanel.webview.html = newContent;
+    } catch (error) {
+        console.log(error);
+        vscode.window.showErrorMessage('An error occurred while calling the OpenAI API');
     }
 }
 
