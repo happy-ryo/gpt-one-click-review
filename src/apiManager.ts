@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
+const DEFAULT_LANGUAGE = 'English';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
     const prompt = `
@@ -15,7 +16,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     4. For programming code, ensure each line ends with a </br>.
     5. When suggesting modifications to the source code, ensure they match the format of the code being reviewed.
     6. Rate each point of feedback on a scale from 1 to 10. A score of 1 indicates that no change is necessary, but caution is advised. A score of 5 suggests that modifications would be beneficial, and a score of 10 emphasizes the need for corrections. Please include this score alongside each point of feedback.No score is required for positive feedback.
-    7. The review should be conducted in Japanese.
+    7. The review should be conducted in ${getLanguageSetting()}.
 
     Title: <h2>Title</h2></br>
     Item: <b>Bold</b></br>
@@ -73,8 +74,8 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 }
 
 const getOpenAiApiKey = (): string => {
-    const config = vscode.workspace.getConfiguration('gpt-one-click-review');
-    const key = config.get('openaiApiKey');
+    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+    const key = configuration.get('openaiApiKey');
     if (!key || typeof key !== 'string') {
         vscode.window.showErrorMessage('Please set your OpenAI API key in the settings');
         throw new Error('OpenAI API key not set');
@@ -82,3 +83,13 @@ const getOpenAiApiKey = (): string => {
 
     return key;
 };
+
+const getLanguageSetting = (): string => {
+    try {
+        const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+        return configuration.get('responseLanguage') || DEFAULT_LANGUAGE;
+    } catch (error) {
+        console.error('Error while getting language setting: ', error);
+        return DEFAULT_LANGUAGE;
+    }
+}
