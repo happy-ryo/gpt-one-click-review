@@ -68,7 +68,6 @@ export async function getReview(selectedText: string, fileExtension: string, mod
             webViewPanel.webview.html = newContent;
         }
     } catch (error) {
-        console.log(error);
         vscode.window.showErrorMessage('An error occurred while calling the OpenAI API');
     }
 }
