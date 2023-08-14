@@ -10,13 +10,13 @@ export function activate(context: vscode.ExtensionContext) {
     subscriptionReviewCode(context, 'gpt-3.5-turbo-16k');
 }
 
-const subscriptionReviewCode = (context: vscode.ExtensionContext, model: string) => {
-    let reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${getModelNumber(model)}`, async () => {
+const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: string) => {
+    const reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${getModelNumber(modelType)}`, async () => {
         const selectedText = getSelectedText();
         const fileExtension = getFileExtension();
         startLoading(context);
 
-        getReview(selectedText, fileExtension, model, context);
+        getReview(selectedText, fileExtension, modelType, context);
     });
     context.subscriptions.push(reviewCode);
     return undefined;
