@@ -46,11 +46,15 @@ const getSelectedText = (): string => {
     }
 };
 
+
 const getModelNumber = (model: string): number => {
-    if (model === 'gpt-4') {
-        return 4;
-    } else {
-        return 3;
+    switch(model) {
+        case 'gpt-4':
+            return 4;
+        case 'gpt-3':
+            return 3;
+        default:
+            throw new Error(`Invalid model: ${model}`);
     }
 };
 
