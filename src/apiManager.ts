@@ -75,14 +75,10 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 const getOpenAiApiKey = (): string => {
     const config = vscode.workspace.getConfiguration('gpt-one-click-review');
     const key = config.get('openaiApiKey');
-    if (key === undefined || key === '') {
+    if (!key || typeof key !== 'string') {
         vscode.window.showErrorMessage('Please set your OpenAI API key in the settings');
         throw new Error('OpenAI API key not set');
-    } else {
-        if (typeof key !== 'string') {
-            vscode.window.showErrorMessage('OpenAI API key is not a string');
-            throw new Error('OpenAI API key is not a string');
-        }
-        return key;
     }
+
+    return key;
 };
