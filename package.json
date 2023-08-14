@@ -44,7 +44,14 @@
           "default": "",
           "description": "OpenAI API Key (sk-xxxxxxxxxxxxx)",
           "scope": "window"
-        }
+        },
+        "gpt-one-click-review.responseLanguage": {
+                "type": "string",
+                "default": "English",
+                "enum": ["English", "Japanese", "Vietnamese"],
+                "enumDescriptions": ["English", "日本語", "Tiếng Việt"],
+                "description": "Select a language for the extension."
+            }
       }
     }
   },
