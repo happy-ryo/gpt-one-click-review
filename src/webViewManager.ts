@@ -11,6 +11,9 @@ export const startLoading = (content: vscode.ExtensionContext) => {
         <script>
             window.addEventListener('message', event => {
                 const message = event.data; 
+                if (typeof message !== 'string') {
+                    return;
+                }
                 const contentElement = document.getElementById('content');
                 contentElement.innerHTML += message;
             });
