@@ -26,6 +26,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     `;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
+    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model)
 
     try {
         const stream = await openai.chat.completions.create({
@@ -34,7 +35,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
                 { "role": "system", "content": prompt },
                 { "role": "user", "content": selectedText }
             ],
-            max_tokens: calculateTokenRemainde(selectedText.concat(prompt), model),
+            max_tokens: tokens,
             stream: true,
             temperature: 0.7,
         });
