@@ -50,7 +50,7 @@
                 "default": "English",
                 "enum": ["English", "Japanese", "Vietnamese"],
                 "enumDescriptions": ["English", "日本語", "Tiếng Việt"],
-                "description": "Select a language for the extension."
+                "description": "Select a language to display the review results."
             }
       }
     }
