@@ -88,6 +88,10 @@ const getOpenAiApiKey = (): string => {
 const getLanguageSetting = (): string => {
     try {
         const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+        const language = configuration.get('responseLanguage');
+        if (language === 'Other') {
+            return configuration.get('responseLanguageOther') || DEFAULT_LANGUAGE;
+        }
         return configuration.get('responseLanguage') || DEFAULT_LANGUAGE;
     } catch (error) {
         console.error('Error while getting language setting: ', error);

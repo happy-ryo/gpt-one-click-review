@@ -51,14 +51,22 @@
           "enum": [
             "English",
             "Japanese",
-            "Vietnamese"
+            "Vietnamese",
+            "Other"
           ],
           "enumDescriptions": [
             "English",
             "日本語",
-            "Tiếng Việt"
+            "Tiếng Việt",
+            "Other"
           ],
           "description": "Select a language to display the review results."
+        },
+        "gpt-one-click-review.responseLanguageOther": {
+          "type": "string",
+          "default": "",
+          "description": "If \"Other\" is selected. Enter the language code to display the review results. (e.g. English, Japanese, Vietnamese)",
+          "scope": "window"
         }
       }
     }
