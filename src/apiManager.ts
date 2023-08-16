@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
+import { calculateTokenRemainde } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
@@ -25,6 +26,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     `;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
+    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model)
 
     try {
         const stream = await openai.chat.completions.create({
@@ -33,7 +35,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
                 { "role": "system", "content": prompt },
                 { "role": "user", "content": selectedText }
             ],
-            max_tokens: 5000,
+            max_tokens: tokens,
             stream: true,
             temperature: 0.7,
         });
