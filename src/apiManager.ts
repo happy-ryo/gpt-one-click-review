@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
+import { calculateTokenRemainde } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
@@ -33,7 +34,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
                 { "role": "system", "content": prompt },
                 { "role": "user", "content": selectedText }
             ],
-            max_tokens: 5000,
+            max_tokens: calculateTokenRemainde(selectedText.concat(prompt), model),
             stream: true,
             temperature: 0.7,
         });
