@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { getReview } from './apiManager';
 import { startLoading } from './webViewManager';
 import * as path from 'path';
+import { getModelNumber } from './openaiHelper';
 
 export function activate(context: vscode.ExtensionContext) {
     subscriptionReviewCode(context, 'gpt-4');
@@ -46,17 +47,6 @@ const getSelectedText = (): string => {
     }
 };
 
-
-const getModelNumber = (model: string): number => {
-    switch(model) {
-        case 'gpt-4':
-            return 4;
-        case 'gpt-3':
-            return 3;
-        default:
-            throw new Error(`Invalid model: ${model}`);
-    }
-};
 
 // This method is called when your extension is deactivated
 export function deactivate() { }
