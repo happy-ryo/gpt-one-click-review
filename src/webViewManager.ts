@@ -11,6 +11,9 @@ export const startLoading = (content: vscode.ExtensionContext) => {
         <script>
             window.addEventListener('message', event => {
                 const message = event.data; 
+                if (typeof message !== 'string') {
+                    return;
+                }
                 const contentElement = document.getElementById('content');
                 contentElement.innerHTML += message;
             });
@@ -18,7 +21,7 @@ export const startLoading = (content: vscode.ExtensionContext) => {
     </body>
     </html>
 `;
-}
+};
 
 export const getWebViewPanel = (content: vscode.ExtensionContext): vscode.WebviewPanel => {
     if (!webViewPanel) {
@@ -35,4 +38,4 @@ export const getWebViewPanel = (content: vscode.ExtensionContext): vscode.Webvie
         }, undefined, content.subscriptions);
     }
     return webViewPanel;
-}
+};
