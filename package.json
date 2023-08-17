@@ -68,7 +68,8 @@
             "Tiếng Việt",
             "Other"
           ],
-          "description": "Select a language to display the review results."
+          "description": "Select a language to display the review results.",
+          "scope": "window"
         },
         "gpt-one-click-review.responseLanguageOther": {
           "type": "string",
