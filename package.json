@@ -45,6 +45,14 @@
           "description": "OpenAI API Key (sk-xxxxxxxxxxxxx)",
           "scope": "window"
         },
+        "gpt-one-click-review.openaiTempreture": {
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0.1,
+          "maximum": 1.0,
+          "description": "OpenAI Tempreture",
+          "scope": "window"
+        },
         "gpt-one-click-review.responseLanguage": {
           "type": "string",
           "default": "English",
