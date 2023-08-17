@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
-import { calculateTokenRemainde } from './openaiHelper';
+import { calculateTokenRemainde, getOpenAiApiKey } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
@@ -74,16 +74,6 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     }
 }
 
-const getOpenAiApiKey = (): string => {
-    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
-    const key = configuration.get('openaiApiKey');
-    if (!key || typeof key !== 'string') {
-        vscode.window.showErrorMessage('Please set your OpenAI API key in the settings');
-        throw new Error('OpenAI API key not set');
-    }
-
-    return key;
-};
 
 const getLanguageSetting = (): string => {
     try {

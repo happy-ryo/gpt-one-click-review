@@ -1,4 +1,5 @@
 import {encode, decode} from 'gpt-3-encoder';
+import * as vscode from 'vscode';
 const GPT4_TOKENS = 8192;
 const GPT3_TOKENS = 16384;
 
@@ -27,4 +28,15 @@ export const getModelNumber = (model: string): number => {
         default:
             throw new Error(`Invalid model: ${model}`);
     }
+};
+
+export const getOpenAiApiKey = (): string => {
+    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+    const key = configuration.get('openaiApiKey');
+    if (!key || typeof key !== 'string') {
+        vscode.window.showErrorMessage('Please set your OpenAI API key in the settings');
+        throw new Error('OpenAI API key not set');
+    }
+
+    return key;
 };
