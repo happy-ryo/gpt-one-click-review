@@ -5,7 +5,7 @@ const GPT3_TOKENS = 16384;
 
 export const encodeText = (text: string): number[] => {
     return encode(text);
-}
+};
 
 export const calculateTokenRemainde = (text: string, model: string): number => {
     const tokens = encodeText(text);
@@ -17,7 +17,7 @@ export const calculateTokenRemainde = (text: string, model: string): number => {
         default:
             throw new Error(`Invalid model: ${model}`);
     }
-}
+};
 
 export const getModelNumber = (model: string): number => {
     switch (model) {
@@ -47,6 +47,6 @@ export const getTempreture = (): number => {
     if (temperature! < 0.1 || temperature! > 1 || typeof temperature !== 'number') {
         return 0.8;
     }
-    return temperature;
 
-}
+    return temperature;
+};
