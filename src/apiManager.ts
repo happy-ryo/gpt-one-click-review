@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
-import { calculateTokenRemainde, getOpenAiApiKey } from './openaiHelper';
+import { calculateTokenRemainde, getOpenAiApiKey, getTempreture } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
@@ -37,7 +37,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
             ],
             max_tokens: tokens,
             stream: true,
-            temperature: 0.7,
+            temperature: getTempreture(),
         });
 
         let webViewPanel = getWebViewPanel(context);

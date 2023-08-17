@@ -1,4 +1,4 @@
-import {encode, decode} from 'gpt-3-encoder';
+import { encode, decode } from 'gpt-3-encoder';
 import * as vscode from 'vscode';
 const GPT4_TOKENS = 8192;
 const GPT3_TOKENS = 16384;
@@ -9,7 +9,7 @@ export const encodeText = (text: string): number[] => {
 
 export const calculateTokenRemainde = (text: string, model: string): number => {
     const tokens = encodeText(text);
-    switch(model) {
+    switch (model) {
         case 'gpt-4':
             return GPT4_TOKENS - tokens.length;
         case 'gpt-3':
@@ -20,7 +20,7 @@ export const calculateTokenRemainde = (text: string, model: string): number => {
 }
 
 export const getModelNumber = (model: string): number => {
-    switch(model) {
+    switch (model) {
         case 'gpt-4':
             return 4;
         case 'gpt-3':
@@ -40,3 +40,13 @@ export const getOpenAiApiKey = (): string => {
 
     return key;
 };
+
+export const getTempreture = (): number => {
+    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+    const temperature = configuration.get<number>('openaiTempreture');
+    if (temperature! < 0.1 || temperature! > 1 || typeof temperature !== 'number') {
+        return 0.8;
+    }
+    return temperature;
+
+}
