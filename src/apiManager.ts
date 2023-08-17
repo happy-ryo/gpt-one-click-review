@@ -26,7 +26,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     `;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
-    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model)
+    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model);
 
     try {
         const stream = await openai.chat.completions.create({
@@ -87,4 +87,4 @@ const getLanguageSetting = (): string => {
         console.error('Error while getting language setting: ', error);
         return DEFAULT_LANGUAGE;
     }
-}
+};
