@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
-import { calculateTokenRemainde } from './openaiHelper';
+import { calculateTokenRemainde, getOpenAiApiKey, getTempreture } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
@@ -26,7 +26,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     `;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
-    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model)
+    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model);
 
     try {
         const stream = await openai.chat.completions.create({
@@ -37,7 +37,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
             ],
             max_tokens: tokens,
             stream: true,
-            temperature: 0.7,
+            temperature: getTempreture(),
         });
 
         let webViewPanel = getWebViewPanel(context);
@@ -53,7 +53,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 
             buffer.push(text.content);
 
-            if (buffer.length === 50) {
+            if (buffer.length === getReviewUpdateBufferInterval()) {
                 const combinedContent = buffer.join('');
                 const currentContent = webViewPanel.webview.html;
                 const newContent = currentContent.replace('</body>', `${combinedContent}</body>`);
@@ -74,23 +74,27 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     }
 }
 
-const getOpenAiApiKey = (): string => {
-    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
-    const key = configuration.get('openaiApiKey');
-    if (!key || typeof key !== 'string') {
-        vscode.window.showErrorMessage('Please set your OpenAI API key in the settings');
-        throw new Error('OpenAI API key not set');
-    }
-
-    return key;
-};
 
 const getLanguageSetting = (): string => {
     try {
         const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+        const language = configuration.get('responseLanguage');
+        if (language === 'Other') {
+            return configuration.get('responseLanguageOther') || DEFAULT_LANGUAGE;
+        }
         return configuration.get('responseLanguage') || DEFAULT_LANGUAGE;
     } catch (error) {
         console.error('Error while getting language setting: ', error);
         return DEFAULT_LANGUAGE;
     }
-}
+};
+
+const getReviewUpdateBufferInterval = (): number => {
+    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+    const temperature = configuration.get<number>('reviewUpdateBufferInterval');
+    if (temperature! > 1 || typeof temperature !== 'number') {
+        return 0.8;
+    }
+
+    return temperature;
+};
