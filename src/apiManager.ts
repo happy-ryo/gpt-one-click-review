@@ -53,7 +53,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 
             buffer.push(text.content);
 
-            if (buffer.length === 50) {
+            if (buffer.length === getReviewUpdateBufferInterval()) {
                 const combinedContent = buffer.join('');
                 const currentContent = webViewPanel.webview.html;
                 const newContent = currentContent.replace('</body>', `${combinedContent}</body>`);
@@ -87,4 +87,14 @@ const getLanguageSetting = (): string => {
         console.error('Error while getting language setting: ', error);
         return DEFAULT_LANGUAGE;
     }
+};
+
+const getReviewUpdateBufferInterval = (): number => {
+    const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
+    const temperature = configuration.get<number>('reviewUpdateBufferInterval');
+    if (temperature! > 1 || typeof temperature !== 'number') {
+        return 0.8;
+    }
+
+    return temperature;
 };

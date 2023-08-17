@@ -76,6 +76,13 @@
           "default": "",
           "description": "If \"Other\" is selected. Enter the language code to display the review results. (e.g. English, Japanese, Vietnamese)",
           "scope": "window"
+        },
+        "gpt-one-click-review.reviewUpdateBufferInterval": {
+          "type": "number",
+          "default": 50,
+          "minimum": 1,
+          "description": "Set the frequency at which the WebView displaying the reviews is updated.",
+          "scope": "window"
         }
       }
     }
