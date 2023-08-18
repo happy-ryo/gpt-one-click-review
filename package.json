@@ -1,7 +1,7 @@
 {
   "name": "gpt-one-click-review",
   "displayName": "GPT One Click Review",
-  "description": "",
+  "description": "This is an extension that allows you to select a range of codes and receive code reviews with a single click.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.81.0"
