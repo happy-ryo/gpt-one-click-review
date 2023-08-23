@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';

@@ -25,11 +25,12 @@ const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: str
 
 const getFileExtension = (): string => {
     const editor = vscode.window.activeTextEditor;
-    if (editor != null) {
-        const filePath = editor.document.uri.fsPath;
-        return path.extname(filePath);
+    if (editor === undefined) {
+        vscode.window.showErrorMessage('No active editor');
+        throw new Error('No active editor');
     }
-    return '';
+    const filePath = editor.document.uri.fsPath;
+    return path.extname(filePath);
 };
 
 const getSelectedText = (): string => {
@@ -46,7 +47,6 @@ const getSelectedText = (): string => {
         return selectedText;
     }
 };
-
 
 // This method is called when your extension is deactivated
 export function deactivate() { }
