@@ -8,7 +8,7 @@ import { getModelNumber } from './openaiHelper';
 
 export function activate(context: vscode.ExtensionContext) {
     subscriptionReviewCode(context, 'gpt-4');
-    subscriptionReviewCode(context, 'gpt-3.5-turbo-16k');
+    subscriptionReviewCode(context, 'gpt-3.5-turbo-16k-0613');
 }
 
 const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: string) => {

@@ -12,7 +12,7 @@ export const calculateTokenRemainde = (text: string, model: string): number => {
     switch (model) {
         case 'gpt-4':
             return GPT4_TOKENS - tokens.length;
-        case 'gpt-3':
+        case 'gpt-3.5-turbo-16k-0613':
             return GPT3_TOKENS - tokens.length;
         default:
             throw new Error(`Invalid model: ${model}`);
@@ -23,7 +23,7 @@ export const getModelNumber = (model: string): number => {
     switch (model) {
         case 'gpt-4':
             return 4;
-        case 'gpt-3':
+        case 'gpt-3.5-turbo-16k-0613':
             return 3;
         default:
             throw new Error(`Invalid model: ${model}`);

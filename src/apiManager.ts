@@ -4,29 +4,29 @@ import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
 import { calculateTokenRemainde, getOpenAiApiKey, getTempreture } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
+const DEFAULT_INTERVAL = 50;
 
 export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
     const prompt = `
-    Please thoroughly review the code written in ${fileExtension} as a professional and return the results as an HTML file following the format below:</br></br>
-    Please limit your praise of the good parts to five items.</br></br>
-    Be sure to write sample code for the improvements.</br></br>
+    Rigorously review the code written in ${fileExtension} as an expert and return the results in an HTML format adhering to the format below:
 
-    [limitation of the HTML code]
-    1. Insert line breaks as appropriate for each item and separate paragraphs using <p> tags. Ensure every item ends with a </br>.
-    2. Make titles and item numbers bold and underline them for clarity.
-    3. Ensure that every sentence ends with a </br>.
-    4. For programming code, ensure each line ends with a </br>.
-    5. When suggesting modifications to the source code, ensure they match the format of the code being reviewed.
-    6. Rate each point of feedback on a scale from 1 to 10. A score of 1 indicates that no change is necessary, but caution is advised. A score of 5 suggests that modifications would be beneficial, and a score of 10 emphasizes the need for corrections. Please include this score alongside each point of feedback.No score is required for positive feedback.
-    7. The review should be conducted in ${getLanguageSetting()}.
+    [HTML Code Limitations]
+    1. Insert line breaks appropriately for each item and divide paragraphs using <p> tags. Finish every item with a </br> without exception.
+    2. Bold and underline titles and item numbers for clear distinction.
+    3. Ensure every sentence concludes with a </br>.
+    4. When proposing modifications to the source code, they must match the format of the code under review.
+    5. Rate each feedback point on a scale from 1 to 10. A score of 1 signifies no change is required but be cautious. A score of 5 implies modifications are recommended, and a score of 10 underscores the urgency for corrections. 
+    6. It is imperative to conduct the review in ${getLanguageSetting()}.
 
-    Title: <h2>Title</h2></br>
-    Item: <b>Bold</b></br>
-    Line break: </br></br>
-    Programming code: <code style="background-color:white;color:black;"><pre style="background-color:white;color:black;">Code</pre></code></br>
+
+    Review Title: <h2>{title}</h2></br>
+    Review Item: <b>{item}</b></br>
+    Programming code: <pre style="background-color:white;color:black;">{code}</pre></br>
+
+    Write sample code for all improvements without fail.
     `;
 
-    const openai = new OpenAI({ apiKey: getOpenAiApiKey() });
+    const openai = new OpenAI({ apiKey: getOpenAiApiKey() }); 
     const tokens = calculateTokenRemainde(selectedText.concat(prompt), model);
 
     try {
@@ -79,11 +79,11 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 const getLanguageSetting = (): string => {
     try {
         const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
-        const language = configuration.get('responseLanguage');
+        const language = configuration.get<string>('responseLanguage') || DEFAULT_LANGUAGE;
         if (language === 'Other') {
-            return configuration.get('responseLanguageOther') || DEFAULT_LANGUAGE;
+            return configuration.get<string>('responseLanguageOther') || DEFAULT_LANGUAGE;
         }
-        return configuration.get('responseLanguage') || DEFAULT_LANGUAGE;
+        return language;
     } catch (error) {
         console.error('Error while getting language setting: ', error);
         return DEFAULT_LANGUAGE;
@@ -92,10 +92,10 @@ const getLanguageSetting = (): string => {
 
 const getReviewUpdateBufferInterval = (): number => {
     const configuration = vscode.workspace.getConfiguration('gpt-one-click-review');
-    const temperature = configuration.get<number>('reviewUpdateBufferInterval');
-    if (temperature! > 1 || typeof temperature !== 'number') {
-        return 0.8;
+    const interval = configuration.get<number>('reviewUpdateBufferInterval');
+    if (typeof interval !== 'number' || interval < 1) {
+        return DEFAULT_INTERVAL;
     }
 
-    return temperature;
+    return interval;
 };
