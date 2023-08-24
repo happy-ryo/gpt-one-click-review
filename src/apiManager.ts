@@ -45,6 +45,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
         webViewPanel.reveal();
 
         let buffer: string[] = [];
+        const interval = getReviewUpdateBufferInterval();
 
         for await (const message of stream) {
             let text = message.choices[0].delta;
@@ -54,7 +55,7 @@ export async function getReview(selectedText: string, fileExtension: string, mod
 
             buffer.push(text.content);
 
-            if (buffer.length === getReviewUpdateBufferInterval()) {
+            if (buffer.length === interval) {
                 const combinedContent = buffer.join('');
                 const currentContent = webViewPanel.webview.html;
                 const newContent = currentContent.replace('</body>', `${combinedContent}</body>`);
