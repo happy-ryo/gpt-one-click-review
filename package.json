@@ -68,7 +68,7 @@
             "Tiếng Việt",
             "Other"
           ],
-          "description": "Select a language to display the review results.",
+          "description": "Select a language to display the review results.(GPT-3.5 may not always work well, GPT-4 is recommended.)",
           "scope": "window"
         },
         "gpt-one-click-review.responseLanguageOther": {
