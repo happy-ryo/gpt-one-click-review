@@ -26,15 +26,17 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     Write sample code for all improvements without fail.
     `;
 
+    const userContent = `Analyze the given ${fileExtension} code for code smells and suggest improvements: ${selectedText}.`;
+
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() }); 
-    const tokens = calculateTokenRemainde(selectedText.concat(prompt), model);
+    const tokens = calculateTokenRemainde(userContent.concat(prompt), model);
 
     try {
         const stream = await openai.chat.completions.create({
             model: model,
             messages: [
                 { "role": "system", "content": prompt },
-                { "role": "user", "content": selectedText }
+                { "role": "user", "content": userContent }
             ],
             max_tokens: tokens,
             stream: true,
