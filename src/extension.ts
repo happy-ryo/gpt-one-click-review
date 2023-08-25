@@ -6,9 +6,14 @@ import { startLoading } from './webViewManager';
 import * as path from 'path';
 import { getModelNumber } from './openaiHelper';
 
+enum GptModel {
+    gpt4 = 'gpt-4',
+    gpt3 = 'gpt-3.5-turbo-16k-0613'
+}
+
 export function activate(context: vscode.ExtensionContext) {
-    subscriptionReviewCode(context, 'gpt-4');
-    subscriptionReviewCode(context, 'gpt-3.5-turbo-16k-0613');
+    subscriptionReviewCode(context, GptModel.gpt4);
+    subscriptionReviewCode(context, GptModel.gpt3);
 }
 
 const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: string) => {
