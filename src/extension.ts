@@ -1,28 +1,29 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { getReview } from './apiManager';
+import { getGpt4Review, getGpt3Review } from './apiManager';
 import { startLoading } from './webViewManager';
 import * as path from 'path';
-import { getModelNumber } from './openaiHelper';
-
-enum GptModel {
-    gpt4 = 'gpt-4',
-    gpt3 = 'gpt-3.5-turbo-16k-0613'
-}
+import { getModelNumber, GptModel } from './openaiHelper';
 
 export function activate(context: vscode.ExtensionContext) {
     subscriptionReviewCode(context, GptModel.gpt4);
     subscriptionReviewCode(context, GptModel.gpt3);
 }
 
-const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: string) => {
+const subscriptionReviewCode = (context: vscode.ExtensionContext, modelType: GptModel) => {
     const reviewCode = vscode.commands.registerCommand(`gpt-one-click-review.reviewCode${getModelNumber(modelType)}`, async () => {
         const selectedText = getSelectedText();
         const fileExtension = getFileExtension();
         startLoading(context);
 
-        getReview(selectedText, fileExtension, modelType, context);
+        if (modelType === GptModel.gpt4) {
+            getGpt4Review(selectedText, fileExtension, context);
+        } else if (modelType === GptModel.gpt3) {
+            getGpt3Review(selectedText, fileExtension, context);
+        } else {
+            throw new Error(`Invalid model: ${modelType}`);
+        }
     });
     context.subscriptions.push(reviewCode);
     return undefined;

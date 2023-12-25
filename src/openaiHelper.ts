@@ -1,4 +1,4 @@
-import { encode, decode } from 'gpt-3-encoder';
+import { encode } from 'gpt-3-encoder';
 import * as vscode from 'vscode';
 const GPT4_TOKENS = 8192;
 const GPT3_TOKENS = 16384;
@@ -50,3 +50,8 @@ export const getTempreture = (): number => {
 
     return temperature;
 };
+
+export enum GptModel {
+    gpt4 = 'gpt-4',
+    gpt3 = 'gpt-3.5-turbo-16k-0613'
+}

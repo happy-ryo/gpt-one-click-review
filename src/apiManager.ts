@@ -2,11 +2,29 @@
 import * as vscode from 'vscode';
 import OpenAI from 'openai';
 import { getWebViewPanel } from './webViewManager';
-import { calculateTokenRemainde, getOpenAiApiKey, getTempreture } from './openaiHelper';
+import { GptModel, calculateTokenRemainde, getOpenAiApiKey, getTempreture } from './openaiHelper';
 const DEFAULT_LANGUAGE = 'English';
 const DEFAULT_INTERVAL = 50;
 
-export async function getReview(selectedText: string, fileExtension: string, model: string, context: vscode.ExtensionContext) {
+export async function getGpt3Review(selectedText: string, fileExtension: string, context: vscode.ExtensionContext) {
+    getGpt4Review(selectedText, fileExtension, context);
+
+    // const prompt = ``;
+    // const userContent = `Analyze the given ${fileExtension} code for code smells and suggest improvements: ${selectedText}.`;
+    // const openai = new OpenAI({ apiKey: getOpenAiApiKey() }); 
+    // const tokens = calculateTokenRemainde(userContent.concat(prompt), GptModel.gpt3);
+    // await openai.chat.completions.create({
+    //     model: GptModel.gpt3,
+    //     messages: [
+    //         { "role": "system", "content": prompt },
+    //         { "role": "user", "content": userContent }
+    //     ],
+    //     max_tokens: tokens,
+    //     temperature: getTempreture(),
+    // });
+}
+
+export async function getGpt4Review(selectedText: string, fileExtension: string, context: vscode.ExtensionContext) {
     const prompt = `
     Rigorously review the code written in ${fileExtension} as an expert and return the results in an HTML format adhering to the format below:
 
@@ -29,11 +47,11 @@ export async function getReview(selectedText: string, fileExtension: string, mod
     const userContent = `Analyze the given ${fileExtension} code for code smells and suggest improvements: ${selectedText}.`;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() }); 
-    const tokens = calculateTokenRemainde(userContent.concat(prompt), model);
+    const tokens = calculateTokenRemainde(userContent.concat(prompt), GptModel.gpt4);
 
     try {
         const stream = await openai.chat.completions.create({
-            model: model,
+            model: GptModel.gpt4,
             messages: [
                 { "role": "system", "content": prompt },
                 { "role": "user", "content": userContent }
