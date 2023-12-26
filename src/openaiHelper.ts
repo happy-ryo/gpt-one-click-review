@@ -10,9 +10,9 @@ export const encodeText = (text: string): number[] => {
 export const calculateTokenRemainde = (text: string, model: string): number => {
     const tokens = encodeText(text);
     switch (model) {
-        case 'gpt-4':
+        case 'gpt-4-1106-preview':
             return GPT4_TOKENS - tokens.length;
-        case 'gpt-3.5-turbo-16k-0613':
+        case 'gpt-3.5-turbo-1106':
             return GPT3_TOKENS - tokens.length;
         default:
             throw new Error(`Invalid model: ${model}`);
@@ -21,9 +21,9 @@ export const calculateTokenRemainde = (text: string, model: string): number => {
 
 export const getModelNumber = (model: string): number => {
     switch (model) {
-        case 'gpt-4':
+        case 'gpt-4-1106-preview':
             return 4;
-        case 'gpt-3.5-turbo-16k-0613':
+        case 'gpt-3.5-turbo-1106':
             return 3;
         default:
             throw new Error(`Invalid model: ${model}`);
@@ -52,6 +52,6 @@ export const getTempreture = (): number => {
 };
 
 export enum GptModel {
-    gpt4 = 'gpt-4',
-    gpt3 = 'gpt-3.5-turbo-16k-0613'
+    gpt4 = 'gpt-4-1106-preview',
+    gpt3 = 'gpt-3.5-turbo-1106'
 }

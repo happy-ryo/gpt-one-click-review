@@ -33,13 +33,13 @@ export async function getGpt4Review(selectedText: string, fileExtension: string,
     2. Bold and underline titles and item numbers for clear distinction.
     3. Ensure every sentence concludes with a </br>.
     4. When proposing modifications to the source code, they must match the format of the code under review.
-    5. Rate each feedback point on a scale from 1 to 10. A score of 1 signifies no change is required but be cautious. A score of 5 implies modifications are recommended, and a score of 10 underscores the urgency for corrections. 
+    5. Rate each feedback point on a scale from 1 to 10. A score of 1 signifies no change is required but be cautious. A score of 5 implies modifications are recommended, and a score of 10 underscores the urgency for corrections.If the evaluation score is 1, 2, 3, or 4, please do not display the review.
     6. It is imperative to conduct the review in ${getLanguageSetting()}.
-
+    7. In the case of PHP, Please also check for compliance with PSR-12.
 
     Review Title: <h2>{title}</h2></br>
     Review Item: <b>{item}</b></br>
-    Programming code: <pre style="background-color:white;color:black;">{code}</pre></br>
+    Programming code: <pre font-size: 140% style="background-color:white;color:black;">{code}</pre></br>
 
     Write sample code for all improvements without fail.
     `;
@@ -47,7 +47,7 @@ export async function getGpt4Review(selectedText: string, fileExtension: string,
     const userContent = `Analyze the given ${fileExtension} code for code smells and suggest improvements: ${selectedText}.`;
 
     const openai = new OpenAI({ apiKey: getOpenAiApiKey() }); 
-    const tokens = calculateTokenRemainde(userContent.concat(prompt), GptModel.gpt4);
+    // const tokens = calculateTokenRemainde(userContent.concat(prompt), GptModel.gpt4);
 
     try {
         const stream = await openai.chat.completions.create({
@@ -56,7 +56,7 @@ export async function getGpt4Review(selectedText: string, fileExtension: string,
                 { "role": "system", "content": prompt },
                 { "role": "user", "content": userContent }
             ],
-            max_tokens: tokens,
+            // max_tokens: tokens,
             stream: true,
             temperature: getTempreture(),
         });
@@ -92,6 +92,7 @@ export async function getGpt4Review(selectedText: string, fileExtension: string,
             webViewPanel.webview.html = newContent;
         }
     } catch (error) {
+        console.error('Error while calling OpenAI API: ', error);
         vscode.window.showErrorMessage('An error occurred while calling the OpenAI API');
     }
 }
